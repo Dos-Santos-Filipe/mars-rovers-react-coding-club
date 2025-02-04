@@ -5,16 +5,26 @@ type size = {
   y: number;
 };
 
+type Rover = {
+  x: number;
+  y: number;
+};
 
-const Plateau = ({ size }: { size: size }) => {
+const Plateau = ({ size }: { size: size }, { rovers }: { rovers: Rover[] }) => {
   const { x, y } = size;
   const grid: JSX.Element[] = [];
 
   for (let i = 0; i < x; i++) {
     const row: JSX.Element[] = [];
     for (let j = 0; j < y; j++) {
+      const isHere = i === rover.x && j === rover.y;
       row.push(
-        <div key={`${i}-${j}`} style={{ border: "1px solid red", width: "20px", height: "20px" }}></div>
+        <div
+          key={`${i}-${j}`}
+          style={{ border: "1px solid red", width: "20px", height: "20px" }}
+        >
+          {isHere ? "X" : ""}
+        </div>
       );
     }
     grid.push(
@@ -27,14 +37,13 @@ const Plateau = ({ size }: { size: size }) => {
 };
 
 function App() {
-  // const [size, setSize] = useState({ x: 5, y: 5 });
-
-  const plateauSize = { x: 5, y: 5 };
+  const [plateauSize, setPlateauSize] = useState<size>({ x: 5, y: 5 });
+  const [rovers, setRovers] = useState<Rover[]>([{ x: 3, y: 3 }]);
 
   return (
     <>
       <h1>Mars Rovers</h1>
-      <Plateau size={plateauSize} />
+      <Plateau size={plateauSize} rovers={rovers}} />
     </>
   );
 }
