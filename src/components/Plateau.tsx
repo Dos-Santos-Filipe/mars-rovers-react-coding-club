@@ -1,3 +1,4 @@
+import { Rover } from "../mars-rovers-logic";
 type size = {
     x: number;
     y: number;
@@ -5,12 +6,12 @@ type size = {
 
 type PlateauProps = {
     size: size;
-    position: string[];
+    position: Rover[];
   }
 
 export const Plateau = ({ size, position } : PlateauProps) => {
     const { x, y } = size;
-    const [roverX, roverY, roverDirection] = position[0].split(" ");
+    const { x: roverX, y: roverY, direction: roverDirection} = position[0];
     const rover = { x: Number(roverX), y: Number(roverY), direction: roverDirection };
     const grid: JSX.Element[] = [];
     

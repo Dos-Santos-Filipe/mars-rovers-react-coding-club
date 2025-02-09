@@ -1,6 +1,6 @@
 const directions = ["N", "E", "S", "W"];
 
-type Rover = {
+export type Rover = {
   x: number;
   y: number;
   direction: string;
