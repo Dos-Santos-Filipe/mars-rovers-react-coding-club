@@ -7,7 +7,7 @@ type Rover = {
   command?: string[];
 };
 
-const plateauSize = (input: string[]) => {
+export const getPlateauSize = (input: string[]) => {
   const sizeArray = input[0].split(" ").map(Number);
   return {
     x: sizeArray[0],
@@ -15,7 +15,7 @@ const plateauSize = (input: string[]) => {
   };
 };
 
-const getRovers = (input: string[]) => {
+export const getRovers = (input: string[]) => {
   const rovers: Rover[] = [];
   for (let i = 1; i < input.length; i += 2) {
     const [x, y, direction] = input[i].split(" ");
@@ -31,7 +31,10 @@ const getRovers = (input: string[]) => {
   return rovers;
 };
 
-const getCommand = (input: string[], rovers: Rover[]) => {
+
+
+
+export const getCommand = (input: string[], rovers: Rover[]) => {
   for (let i = 2, j = 0; i < input.length; i += 2, j++) {
     const command = input[i];
     if (rovers[j]) {
@@ -100,7 +103,7 @@ const moveForward = (plateauLimits: { x: number; y: number }, rover: Rover) => {
 };
 
 const main = (input: string[]) => {
-  const plateau = plateauSize(input);
+  const plateau = getPlateauSize(input);
   const rovers = getRovers(input);
   const roversFinalPositions = moveRovers(plateau, rovers);
 
