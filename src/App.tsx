@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plateau } from "./components/Plateau";
 import { InputArea } from "./components/InputArea";
-import { getPlateauSize, getRovers, Rover } from "./mars-rovers-logic";
+import { getPlateauSize, getRovers, Rover, moveRovers } from "./mars-rovers-logic";
 
 function App() {
   const [plateauSize, setPlateauSize] = useState({ x: 0, y: 0 });
@@ -10,6 +10,7 @@ function App() {
   const handleClick = (input: string[]) => {
     setPlateauSize(getPlateauSize(input));
     setRovers(getRovers(input));
+   // moveRovers(plateauSize, rovers);
     
     console.log("Tamanho do Plateau: ", plateauSize);
     console.log("Posição Rover: ", rovers);

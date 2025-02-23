@@ -32,9 +32,7 @@ export const getRovers = (input: string[]) => {
 };
 
 
-
-
-export const getCommand = (input: string[], rovers: Rover[]) => {
+const getCommand = (input: string[], rovers: Rover[]) => {
   for (let i = 2, j = 0; i < input.length; i += 2, j++) {
     const command = input[i];
     if (rovers[j]) {
@@ -43,9 +41,9 @@ export const getCommand = (input: string[], rovers: Rover[]) => {
   }
 };
 
-const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) => {
+export const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) => {
   const plateauLimits = plateau;
-  const finalPosition: Rover[] = [];
+  const moveList: { x: number; y: number; direction: string }[] = [];
 
   rovers.forEach((rover) => {
     rover.command?.forEach((instruction) => {
@@ -61,10 +59,10 @@ const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) => {
           break;
       }
     });
-    finalPosition.push({ ...rover });
+    moveList.push({ x: rover.x, y: rover.y, direction: rover.direction });
   });
 
-  return finalPosition;
+  return moveList;
 };
 
 const rotateR = (rover: Rover) => {
