@@ -42,8 +42,7 @@ const getCommand = (input: string[], rovers: Rover[]) => {
 };
 
 export const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) => {
-  const plateauLimits = plateau;
-  const moveList: { x: number; y: number; direction: string }[] = [];
+  const positionMoveList: { x: number; y: number; direction: string }[] = [];
 
   rovers.forEach((rover) => {
     rover.command?.forEach((instruction) => {
@@ -55,14 +54,14 @@ export const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) =
           rotateL(rover);
           break;
         default:
-          moveForward(plateauLimits, rover);
+          moveForward(plateau, rover);
           break;
-      }
+        }
+        positionMoveList.push({ x: rover.x, y: rover.y, direction: rover.direction });
     });
-    moveList.push({ x: rover.x, y: rover.y, direction: rover.direction });
   });
 
-  return moveList;
+  return positionMoveList;
 };
 
 const rotateR = (rover: Rover) => {
@@ -100,17 +99,17 @@ const moveForward = (plateauLimits: { x: number; y: number }, rover: Rover) => {
   }
 };
 
-const main = (input: string[]) => {
-  const plateau = getPlateauSize(input);
-  const rovers = getRovers(input);
-  const roversFinalPositions = moveRovers(plateau, rovers);
+// const main = (input: string[]) => {
+//   const plateau = getPlateauSize(input);
+//   const rovers = getRovers(input);
+//   const roversFinalPositions = moveRovers(plateau, rovers);
 
-  for (let i = 0; i < roversFinalPositions.length; i++) {
-    const { x, y, direction } = roversFinalPositions[i];
-    console.log(`Rover ${i + 1}: ${x} ${y} ${direction}`);
-  }
-};
+//   for (let i = 0; i < roversFinalPositions.length; i++) {
+//     const { x, y, direction } = roversFinalPositions[i];
+//     console.log(`Rover ${i + 1}: ${x} ${y} ${direction}`);
+//   }
+// };
 
-const input = ["5 5", "1 2 N", "LMLMLMLMM", "3 3 E", "MMRMMRMRRM"];
+// const input = ["5 5", "1 2 N", "LMLMLMLMM", "3 3 E", "MMRMMRMRRM"];
 
-main(input);
+// main(input);

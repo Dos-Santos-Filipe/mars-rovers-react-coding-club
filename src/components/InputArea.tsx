@@ -18,7 +18,7 @@ export const InputArea: React.FC<InputAreaProps> = ({ onClick }) => {
 
   return (
     <div>
-      <textarea onChange={handleChange} value={input.join("\n")}/>
+      <textarea style={{ width: "200px" , height: "100px" }} onChange={handleChange} value={input.join("\n")}/>
       <button onClick={() => onClick(input)}>Go!</button>
     </div>
   );
