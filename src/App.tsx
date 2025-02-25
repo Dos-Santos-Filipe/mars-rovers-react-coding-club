@@ -16,16 +16,22 @@ function App() {
   const [moveList, setMoveList] = useState<Rover[][]>([]);
 
   useEffect(() => {
-    if (moveList.length === 0) return; 
+    if (moveList.length === 0) return;
+    
+    let currentIndex = 0;
     const interval = setInterval(() => {
-      moveList.map((rover) => {
-        rover.map((position) => {
-          console.log(position);
-        })
-      })});
+      moveList.forEach((rover) => {
+        if (currentIndex < rover.length) {
+          console.log(rover[currentIndex]);
+        }
+      });
+      currentIndex++;
     }, 1000);
+  
     return () => clearInterval(interval);
-  }, [currentCommand]);
+  }, [rovers]);
+  
+
 
   const handleClick = (input: string[]) => {
     setPlateauSize(getPlateauSize(input));
