@@ -13,29 +13,35 @@ function App() {
   const [rovers, setRovers] = useState<Rover[]>([
     { x: 0, y: 0, direction: "N", command: [] },
   ]);
-  const [moveList, setMoveList] = useState([]);
-  const [currentCommand, setCurrentCommand] = useState(rovers.map(rover => rover.command));
+  const [moveList, setMoveList] = useState<Rover[][]>([]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [currentCommand]);
+  useEffect(() => {
+    if (moveList.length === 0) return; 
+    const interval = setInterval(() => {
+      moveList.map((rover) => {
+        rover.map((position) => {
+          console.log(position);
+        })
+      })});
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentCommand]);
 
   const handleClick = (input: string[]) => {
     setPlateauSize(getPlateauSize(input));
     const roversList = getRovers(input);
-    handleMove(plateauSize, roversList);
+    setRovers(roversList);
+    setMoveList(handleMove(plateauSize, roversList));
 
     // console.log("Tamanho do Plateau: ", plateauSize);
     // console.log("Posição Rover: ", rovers);
   };
 
   const handleMove = (plateauSize: { x: number; y: number }, rovers: Rover[]) => {
-    const teste = moveRovers(plateauSize, rovers);
-    console.log("Position list: ", teste);
-
+    const list = moveRovers(plateauSize, rovers);
+    console.log("list: ", list);
+    
+    return (list);
   };
 
   return (

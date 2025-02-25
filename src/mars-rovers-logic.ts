@@ -42,9 +42,10 @@ const getCommand = (input: string[], rovers: Rover[]) => {
 };
 
 export const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) => {
-  const positionMoveList: { x: number; y: number; direction: string }[] = [];
+  const positionMoveList: { x: number; y: number; direction: string }[][] = [];
 
   rovers.forEach((rover) => {
+    const roverPositions: Rover[] = [];
     rover.command?.forEach((instruction) => {
       switch (instruction) {
         case "R":
@@ -57,8 +58,9 @@ export const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) =
           moveForward(plateau, rover);
           break;
         }
-        positionMoveList.push({ x: rover.x, y: rover.y, direction: rover.direction });
-    });
+        roverPositions.push({ x: rover.x, y: rover.y, direction: rover.direction });
+      });
+      positionMoveList.push(roverPositions);
   });
 
   return positionMoveList;
