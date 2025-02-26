@@ -16,17 +16,16 @@ export const getPlateauSize = (input: string[]) => {
 };
 
 export const getRovers = (input: string[]) => {
-  const rovers: Rover[] = [];
+  const rovers: {x:number, y:number, direction:string, command: string}[] = [];
   for (let i = 1; i < input.length; i += 2) {
     const [x, y, direction] = input[i].split(" ");
     rovers.push({
       x: Number(x),
       y: Number(y),
       direction: direction,
+      command: input[i + 1],
     });
   }
-
-  getCommand(input, rovers);
 
   return rovers;
 };
@@ -41,63 +40,68 @@ const getCommand = (input: string[], rovers: Rover[]) => {
   }
 };
 
-export const moveRovers = (plateau: { x: number; y: number }, rovers: Rover[]) => {
-  const positionMoveList: { x: number; y: number; direction: string }[][] = [];
+export const getMovementList = (input: string[]) => {
+  const plateau = getPlateauSize(input);
+  const rovers = getRovers(input)[0];
+  const movements = moveRover(plateau, rovers.x, rovers.y, rovers.direction, rovers.command!);
+  return {plateau, movements};
+}
 
-  rovers.forEach((rover) => {
-    const roverPositions: Rover[] = [];
-    rover.command?.forEach((instruction) => {
-      switch (instruction) {
-        case "R":
-          rotateR(rover);
-          break;
-        case "L":
-          rotateL(rover);
-          break;
-        default:
-          moveForward(plateau, rover);
-          break;
-        }
-        roverPositions.push({ x: rover.x, y: rover.y, direction: rover.direction });
-      });
-      positionMoveList.push(roverPositions);
-  });
+export const moveRover = (plateau: { x: number; y: number },x: number, y: number, direction: string, instructions: string) => {
+  const result: { x: number; y: number; direction: string }[] = [];
 
-  return positionMoveList;
+  for (const instruction of instructions) {
+    switch (instruction) {
+      case "R":
+         result.push({x, y, direction: rotateR(direction)});
+        break;
+      case "L":
+        result.push({x, y, direction: rotateL(direction)});
+        break;
+      default:
+        const values = moveForward(plateau, direction, x, y)!;
+        result.push({x: values.x, y: values.y, direction });
+        break;
+      }
+  }
+  return result;
 };
 
-const rotateR = (rover: Rover) => {
-  const directionIndex = directions.indexOf(rover.direction);
-  rover.direction = directions[(directionIndex + 1) % directions.length];
+const rotateR = (rover: string) => {
+  const directionIndex = directions.indexOf(rover);
+  return directions[(directionIndex + 1) % directions.length];
 };
 
-const rotateL = (rover: Rover) => {
-  const directionIndex = directions.indexOf(rover.direction);
-  rover.direction = directions[(directionIndex + 3) % directions.length];
+const rotateL = (rover: string) => {
+  const directionIndex = directions.indexOf(rover);
+  return directions[(directionIndex + 3) % directions.length];
 };
 
-const moveForward = (plateauLimits: { x: number; y: number }, rover: Rover) => {
-  switch (rover.direction) {
+const moveForward = (plateauLimits: { x: number; y: number }, direction: string, x: number , y: number) => {
+  switch (direction) {
     case "N":
-      if (rover.y < plateauLimits.y) {
-        rover.y++;
+      if (y < plateauLimits.y) {
+        return {x, y: y + 1};
       }
       break;
     case "E":
-      if (rover.x < plateauLimits.x) {
-        rover.x++;
+      if (x < plateauLimits.x) {
+        return {x: x + 1, y};
       }
       break;
     case "S":
-      if (rover.y > 0) {
-        rover.y--;
+      if (y > 0) {
+        return {x, y: y - 1};
       }
       break;
     case "W":
-      if (rover.x > 0) {
-        rover.x--;
+      if (x > 0) {
+        return {x: x - 1, y};
       }
       break;
+    default:
+      console.log("Invalid direction: ", direction);
+      return {x, y};
   }
 };
 

@@ -1,61 +1,64 @@
-import { useEffect, useState } from "react";
-import { Plateau } from "./components/Plateau";
-import { InputArea } from "./components/InputArea";
-import {
-  getPlateauSize,
-  getRovers,
-  Rover,
-  moveRovers,
-} from "./mars-rovers-logic";
+import { useState, useEffect } from "react";
+import { getMovementList, getPlateauSize } from "./mars-rovers-logic";
 
 function App() {
-  const [plateauSize, setPlateauSize] = useState({ x: 0, y: 0 });
-  const [rovers, setRovers] = useState<Rover[]>([
-    { x: 0, y: 0, direction: "N", command: [] },
-  ]);
-  const [moveList, setMoveList] = useState<Rover[][]>([]);
+  const [input, setInput] = useState("");
+  const [plateau, setPlateau] = useState<
+    ReturnType<typeof getPlateauSize> | undefined
+  >();
+  const [moveIndex, setMoveIndex] = useState(-1);
+  const [movements, setMovements] = useState<
+    { x: number; y: number; direction: string }[]
+  >([]);
+  const currentMove = movements[moveIndex];
 
   useEffect(() => {
-    if (moveList.length === 0) return;
-    
-    let currentIndex = 0;
+    if (moveIndex < 0) return;
+
     const interval = setInterval(() => {
-      moveList.forEach((rover) => {
-        if (currentIndex < rover.length) {
-          console.log(rover[currentIndex]);
-        }
-      });
-      currentIndex++;
+      console.log(currentMove);
+
+      if (moveIndex >= movements.length - 1) {
+        clearInterval(interval);
+      }
+      setMoveIndex(moveIndex + 1);
     }, 1000);
-  
+
     return () => clearInterval(interval);
-  }, [rovers]);
-  
+  }, [moveIndex]);
 
+  const go = () => {
+    const inputArray = input.split("\n");
+    const movementList = getMovementList(inputArray);
+    setPlateau(movementList.plateau);
+    setMovements(movementList.movements);
+    setMoveIndex(0);
 
-  const handleClick = (input: string[]) => {
-    setPlateauSize(getPlateauSize(input));
-    const roversList = getRovers(input);
-    setRovers(roversList);
-    setMoveList(handleMove(plateauSize, roversList));
-
-    // console.log("Tamanho do Plateau: ", plateauSize);
-    // console.log("Posição Rover: ", rovers);
-  };
-
-  const handleMove = (plateauSize: { x: number; y: number }, rovers: Rover[]) => {
-    const list = moveRovers(plateauSize, rovers);
-    console.log("list: ", list);
-    
-    return (list);
+    console.log(input);
   };
 
   return (
-    <>
-      <h1>Mars Rovers</h1>
-      <InputArea onClick={handleClick} />
-      <Plateau size={plateauSize} position={rovers} />
-    </>
+    <div>
+      <textarea value={input} onChange={(e) => setInput(e.target.value)} />
+      <button onClick={go}>Go!</button>
+      {plateau && (
+        <table>
+          <body>
+            {Array.from(Array(plateau.x).keys()).map((x) => (
+              <tr key={x}>
+                {Array.from(Array(plateau.y).keys()).map((y) => (
+                  <td style={{ border: "1px solid red" }} key={y}>
+                    {x === currentMove.x &&
+                      y === currentMove.y &&
+                      currentMove.direction}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </body>
+        </table>
+      )}
+    </div>
   );
 }
 

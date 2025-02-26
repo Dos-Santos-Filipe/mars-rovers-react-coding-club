@@ -1,0 +1,11 @@
+0 - para um único Rover: 
+    1 - parse do input 
+    2 - renderizar o plateau 
+    3 - criar a lista de movimentos
+    4 - percorrer a lista de movimentos e atualizar o plateau
+1 - adicionar múltiplos Rovers  
+
+
+5 5
+1 2 N
+LMLMLMLMM
