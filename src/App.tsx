@@ -14,33 +14,33 @@ function App() {
     { x: 0, y: 0, direction: "N", command: [] },
   ]);
   const [moveList, setMoveList] = useState<Rover[][]>([]);
+  const [currentPosition, setCurrentPosition] = useState<Rover[]>(rovers);
 
   useEffect(() => {
     if (moveList.length === 0) return;
-    
+
     let currentIndex = 0;
     const interval = setInterval(() => {
-      moveList.forEach((rover) => {
-        if (currentIndex < rover.length) {
-          console.log(rover[currentIndex]);
-        }
-      });
+      setCurrentPosition((prevPositions) =>
+        prevPositions.map((rover, index) => ({
+          ...rover,
+          x: moveList[index][currentIndex]?.x || rover.x,
+          y: moveList[index][currentIndex]?.y || rover.y,
+          direction: moveList[index][currentIndex]?.direction || rover.direction,
+        }))
+      );
       currentIndex++;
     }, 1000);
-  
-    return () => clearInterval(interval);
-  }, [rovers]);
-  
 
+    return () => clearInterval(interval);
+  }, [moveList]);
 
   const handleClick = (input: string[]) => {
     setPlateauSize(getPlateauSize(input));
     const roversList = getRovers(input);
     setRovers(roversList);
     setMoveList(handleMove(plateauSize, roversList));
-
-    // console.log("Tamanho do Plateau: ", plateauSize);
-    // console.log("Posição Rover: ", rovers);
+    setCurrentPosition(roversList);
   };
 
   const handleMove = (plateauSize: { x: number; y: number }, rovers: Rover[]) => {
@@ -54,7 +54,7 @@ function App() {
     <>
       <h1>Mars Rovers</h1>
       <InputArea onClick={handleClick} />
-      <Plateau size={plateauSize} position={rovers} />
+      <Plateau size={plateauSize} position={currentPosition} />
     </>
   );
 }
